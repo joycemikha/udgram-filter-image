@@ -1,7 +1,9 @@
 import express from 'express';
+import { Router, Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import { Router ,Request,Response } from 'express';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
+
+
 
 (async () => {
 
@@ -29,18 +31,24 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
   /**************************************************************************** */
-  app.get('/filteredimage', async (req:Request,res:Response) =>{
-    const image_url = req.query.image_url.toString();
-    if(!image_url){
-      res.status(400).send('IMAGE URL IS REQUIRED !')
-
+  app.get('/filteredimage' , async (req:Request, res:Response) => {
+    
+    // get the image url
+    const image_url:string  = req.query.image_url;
+    
+    // Throw errors if there's no image url
+    if (!image_url) {
+      res.status(400).send('Please add an image url');
     }
-    const filtered_image = await filterImageFromURL(image_url);
-    res.status(200).sendFile(filtered_image,() => {
-      deleteLocalFiles([filtered_image]);
-    })
+    
+    const filtered_img:string = await filterImageFromURL(image_url);
+
+    // display the image of the sended url and then delete it
+    res.status(200).sendFile(filtered_img, () => {
+      deleteLocalFiles([filtered_img]);
+    });
+
   });
-  
   //! END @TODO1
   
   // Root Endpoint
