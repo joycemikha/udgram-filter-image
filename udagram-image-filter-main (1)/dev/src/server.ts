@@ -3,8 +3,6 @@ import { Router, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
-
-
 (async () => {
 
   // Init the Express application
@@ -34,14 +32,14 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   app.get('/filteredimage' , async (req:Request, res:Response) => {
     
     // get the image url
-    const image_url:string  = req.query.image_url;
+    const image_url  = req.query.image_url.toString();
     
     // Throw errors if there's no image url
     if (!image_url) {
       res.status(400).send('Please add an image url');
     }
     
-    const filtered_img:string = await filterImageFromURL(image_url);
+    const filtered_img = await filterImageFromURL(image_url);
 
     // display the image of the sended url and then delete it
     res.status(200).sendFile(filtered_img, () => {
